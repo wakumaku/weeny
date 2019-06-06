@@ -2,8 +2,7 @@ package main
 
 import (
 	"log"
-
-	"github.com/dudewhocode/weeny/apiserver"
+	"weeny/apiserver"
 )
 
 func main() {

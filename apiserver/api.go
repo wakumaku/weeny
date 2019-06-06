@@ -8,8 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-
-	"github.com/dudewhocode/weeny/cache"
+	"weeny/cache"
 
 	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
