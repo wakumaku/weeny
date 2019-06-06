@@ -9,17 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHash(t *testing.T) {
-	result, err := Hash("hello")
-	if err != nil {
-		t.Errorf("Expected nil, got %s", err)
-	}
-	expected := "5d41402abc4b2a76b9719d911017c592"
-	if result != expected {
-		t.Errorf("Expected %s, got %s", expected, result)
-	}
-}
-
 func TestPing(t *testing.T) {
 	req, err := http.NewRequest("GET", "/ping", nil)
 	if err != nil {

@@ -1,7 +1,6 @@
 package apiserver
 
 import (
-	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,15 +8,17 @@ import (
 	"net/http"
 	"net/url"
 	"weeny/cache"
+	"weeny/hasher"
 
 	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
 )
 
 type ApiServer struct {
-	r      *mux.Router
-	server *http.Server
-	cache  *redis.Client
+	r       *mux.Router
+	server  *http.Server
+	cache   *redis.Client
+	encoder hasher.Hash
 }
 
 type response struct {
@@ -41,14 +42,6 @@ func respond(w io.Writer, msg, data string) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func Hash(a string) (string, error) {
-	h := md5.New()
-	_, err := io.WriteString(h, a)
-	if err != nil {
-		return "", err
-	}
-	return fmt.Sprintf("%x", h.Sum(nil)), nil
-}
 func isValidURL(toTest string) bool {
 	_, err := url.ParseRequestURI(toTest)
 	if err != nil {
@@ -68,7 +61,8 @@ func (api *ApiServer) shotern(w http.ResponseWriter, r *http.Request) {
 		respondError(w, "Not a valid URL")
 		return
 	}
-	urlHash, err := Hash(payload.URL)
+
+	urlHash, err := api.encoder.Encode(payload.URL)
 	if err != nil {
 		respondError(w, "Failure")
 		return
@@ -112,8 +106,9 @@ func NewServer() *ApiServer {
 		log.Fatalf("error while setting cache: %s", err)
 	}
 	return &ApiServer{
-		r:     mux.NewRouter(),
-		cache: c,
+		r:       mux.NewRouter(),
+		cache:   c,
+		encoder: hasher.Md5{},
 	}
 }
 
