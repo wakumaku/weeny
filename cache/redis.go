@@ -6,16 +6,26 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func NewCache(host string, port int) (*redis.Client, error) {
+type Redis struct {
+	client *redis.Client
+}
+
+func NewRedis(host string, port int, password string, database int) (Cache, error) {
 	client := redis.NewClient(
 		&redis.Options{
-			Addr:     "localhost:6379",
-			Password: "",
-			DB:       0,
+			Addr:     fmt.Sprintf("%s:%d", host, port),
+			Password: password,
+			DB:       database,
 		})
-	res := client.Ping()
-	if res.Err() != nil {
-		return nil, fmt.Errorf("failed to connect to redis : %v", res.Err())
-	}
-	return client, nil
+
+	return &Redis{client}, nil
+}
+
+func (r *Redis) Save(key, value string) error {
+	_, err := r.client.HSet("urlmaps", key, value).Result()
+	return err
+}
+
+func (r *Redis) Retrieve(key string) (string, error) {
+	return r.client.HGet("urlmaps", key).Result()
 }
