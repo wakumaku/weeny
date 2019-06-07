@@ -10,15 +10,15 @@ type Redis struct {
 	client *redis.Client
 }
 
-func NewRedis(host string, port int, password string, database int) (Cache, error) {
-	client := redis.NewClient(
-		&redis.Options{
-			Addr:     fmt.Sprintf("%s:%d", host, port),
-			Password: password,
-			DB:       database,
-		})
-
-	return &Redis{client}, nil
+func NewRedis(host string, port int, password string, database int) Cache {
+	return &Redis{
+		redis.NewClient(
+			&redis.Options{
+				Addr:     fmt.Sprintf("%s:%d", host, port),
+				Password: password,
+				DB:       database,
+			}),
+	}
 }
 
 func (r *Redis) Save(key, value string) error {

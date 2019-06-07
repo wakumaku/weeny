@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"weeny/application"
 	"weeny/cache"
@@ -12,20 +11,18 @@ import (
 
 func main() {
 
-	c, err := cache.NewInMemory()
-	if err != nil {
-		log.Fatalf("error while setting cache: %s", err)
-	}
-
-	app := application.New(c, &hasher.Md5{})
+	app := application.New(cache.NewInMemory(), &hasher.Md5{})
 
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Enter an URL to generate a hash or a hash to get an URL: ")
 		text, _ := reader.ReadString('\n')
 
-		if len(text) >= 1 {
+		if len(text) >= 2 {
 			text = text[:len(text)-1]
+		} else {
+			fmt.Print("Entered string is too short, try again.")
+			continue
 		}
 
 		if len(text) > 4 && text[0:4] == "http" {

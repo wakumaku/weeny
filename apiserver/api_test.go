@@ -5,6 +5,9 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"weeny/application"
+	"weeny/cache"
+	"weeny/hasher"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -30,7 +33,7 @@ func TestPing(t *testing.T) {
 }
 
 func TestShortern(t *testing.T) {
-	api := NewServer()
+	api := NewServer(application.New(cache.NewInMemory(), hasher.Md5{}))
 	reader := strings.NewReader(`{"URL":"https://github.com/go-redis/redis"}`)
 	req, err := http.NewRequest("POST", "/shortern", reader)
 

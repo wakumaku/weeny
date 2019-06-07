@@ -9,8 +9,8 @@ type InMemory struct {
 	storage sync.Map
 }
 
-func NewInMemory() (Cache, error) {
-	return &InMemory{}, nil
+func NewInMemory() Cache {
+	return &InMemory{}
 }
 
 func (r *InMemory) Save(key, value string) error {

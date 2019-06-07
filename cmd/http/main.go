@@ -10,17 +10,14 @@ import (
 
 func main() {
 
-	// c, err := cache.NewRedis("localhost", 6379)
-	c, err := cache.NewInMemory()
-	if err != nil {
-		log.Fatalf("error while setting cache: %s", err)
-	}
+	s := apiserver.NewServer(
+		application.New(
+			cache.NewInMemory(),
+			&hasher.Md5{},
+		),
+	)
 
-	app := application.New(c, &hasher.Md5{})
-
-	server := apiserver.NewServer(app)
-
-	if err := server.Start("localhost", 8000); err != nil {
+	if err := s.Start("localhost", 8000); err != nil {
 		log.Fatalf("error while starting server: %s", err)
 	}
 }
