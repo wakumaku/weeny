@@ -4,20 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
-	"weeny/cache"
-	"weeny/hasher"
+	"weeny/application"
 
 	"github.com/gorilla/mux"
 )
 
 type ApiServer struct {
-	r       *mux.Router
-	server  *http.Server
-	cache   cache.Cache
-	encoder hasher.Hash
+	r      *mux.Router
+	server *http.Server
+	app    *application.Application
 }
 
 type response struct {
@@ -61,23 +58,20 @@ func (api *ApiServer) shotern(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	urlHash, err := api.encoder.Encode(payload.URL)
+	urlHash, err := api.app.Save(payload.URL)
 	if err != nil {
 		respondError(w, "Failure")
 		return
 	}
 
-	if err := api.cache.Save(urlHash, payload.URL); err != nil {
-		respondError(w, "Failed to save value in cache")
-		return
-	}
 	respond(w, "Success", urlHash)
 
 }
 
 func (api *ApiServer) redirect(w http.ResponseWriter, r *http.Request) {
 	hash := mux.Vars(r)["hash"]
-	url, err := api.cache.Retrieve(hash)
+
+	url, err := api.app.Get(hash)
 	if err != nil {
 		fmt.Printf("Error : %v \n", err)
 		respondError(w, "Failure")
@@ -90,7 +84,8 @@ func (api *ApiServer) redirect(w http.ResponseWriter, r *http.Request) {
 
 func (api *ApiServer) lookup(w http.ResponseWriter, r *http.Request) {
 	hash := mux.Vars(r)["hash"]
-	url, err := api.cache.Retrieve(hash)
+
+	url, err := api.app.Get(hash)
 	if err != nil {
 		fmt.Printf("Error : %v \n", err)
 		respondError(w, "Failure")
@@ -99,16 +94,10 @@ func (api *ApiServer) lookup(w http.ResponseWriter, r *http.Request) {
 	respond(w, "Success", url)
 }
 
-func NewServer() *ApiServer {
-	// c, err := cache.NewRedis("localhost", 6379)
-	c, err := cache.NewInMemory()
-	if err != nil {
-		log.Fatalf("error while setting cache: %s", err)
-	}
+func NewServer(app *application.Application) *ApiServer {
 	return &ApiServer{
-		r:       mux.NewRouter(),
-		cache:   c,
-		encoder: hasher.Md5{},
+		r:   mux.NewRouter(),
+		app: app,
 	}
 }
 
