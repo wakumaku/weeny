@@ -1,4 +1,1 @@
-export PROJECT_PATH=$(pwd)
-./stop.sh
-docker-compose -f ops/docker/docker-compose.yml up -d --build
-./logs.sh
+docker-compose -p ${PROJECT_NAME} -f ${PROJECT_PATH}/ops/docker/docker-compose.yml up -d --build

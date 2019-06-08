@@ -1,1 +1,1 @@
-docker-compose -f ops/docker/docker-compose.yml logs -f
+docker-compose -p ${PROJECT_NAME} -f ${PROJECT_PATH}/ops/docker/docker-compose.yml logs -f
