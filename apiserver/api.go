@@ -101,13 +101,13 @@ func NewServer(app *application.Application) *ApiServer {
 	}
 }
 
-func (api *ApiServer) Start(host string, port int) error {
+func (api *ApiServer) Start(port int) error {
 	api.r.HandleFunc("/ping", ping).Methods("GET")
 	api.r.HandleFunc("/shortern", api.shotern).Methods("POST")
 	api.r.HandleFunc("/{hash}", api.redirect).Methods("GET")
 	api.r.HandleFunc("/lookup/{hash}", api.lookup).Methods("GET")
 	fmt.Println("Starting the server... ")
-	addr := fmt.Sprintf("%s:%d", host, port)
+	addr := fmt.Sprintf(":%d", port)
 	api.server = &http.Server{
 		Addr:    addr,
 		Handler: api.r,

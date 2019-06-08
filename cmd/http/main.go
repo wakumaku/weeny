@@ -4,20 +4,19 @@ import (
 	"log"
 	"weeny/apiserver"
 	"weeny/application"
-	"weeny/cache"
-	"weeny/hasher"
+	"weeny/config"
 )
 
 func main() {
 
 	s := apiserver.NewServer(
 		application.New(
-			cache.NewInMemory(),
-			&hasher.Md5{},
+			config.CreateCacheFromConfig(),
+			config.CreateHasherFromConfig(),
 		),
 	)
 
-	if err := s.Start("localhost", 8000); err != nil {
+	if err := s.Start(8000); err != nil {
 		log.Fatalf("error while starting server: %s", err)
 	}
 }
