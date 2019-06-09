@@ -6,7 +6,7 @@ services:
     environment: 
       - USE_REDIS=true
     working_dir: /project/src
-    command: sh -c "go build -o ../.build/weeny cmd/http/main.go && ../.build/weeny"
+    command: sh -c "go mod tidy && go mod vendor && go build -o ../.build/weeny cmd/http/main.go && ../.build/weeny"
     volumes: 
     - ${PROJECT_PATH}/.build/_tmp_go:/go
     - ${PROJECT_PATH}:/project
