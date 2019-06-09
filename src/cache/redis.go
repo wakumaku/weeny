@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis"
+	"github.com/pkg/errors"
 )
 
 type Redis struct {
@@ -23,9 +24,13 @@ func NewRedis(host string, port int, password string, database int) Cache {
 
 func (r *Redis) Save(key, value string) error {
 	_, err := r.client.HSet("urlmaps", key, value).Result()
-	return err
+	return errors.Wrap(err, "HSET redis")
 }
 
 func (r *Redis) Retrieve(key string) (string, error) {
-	return r.client.HGet("urlmaps", key).Result()
+	res, err := r.client.HGet("urlmaps", key).Result()
+	if err != nil {
+		return res, errors.Wrap(err, "HGET redis")
+	}
+	return res, err
 }

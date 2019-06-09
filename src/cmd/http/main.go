@@ -1,13 +1,17 @@
 package main
 
 import (
-	"log"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"weeny/apiserver"
 	"weeny/application"
 	"weeny/config"
 )
 
 func main() {
+
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	log.Info().Msg("== weeny ==")
 
 	s := apiserver.NewServer(
 		application.New(
@@ -17,6 +21,6 @@ func main() {
 	)
 
 	if err := s.Start(8000); err != nil {
-		log.Fatalf("error while starting server: %s", err)
+		log.Error().Msgf("Initializing server: %s", err)
 	}
 }

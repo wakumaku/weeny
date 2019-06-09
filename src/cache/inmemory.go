@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"errors"
+	"github.com/pkg/errors"
 	"sync"
 )
 
@@ -21,7 +21,7 @@ func (r *InMemory) Save(key, value string) error {
 func (r *InMemory) Retrieve(key string) (string, error) {
 	v, f := r.storage.Load(key)
 	if !f {
-		return "", errors.New("key not found")
+		return "", errors.Wrap(errors.New("key not found"), "InMemory")
 	}
 
 	return v.(string), nil

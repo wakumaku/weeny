@@ -18,8 +18,10 @@ func TestPing(t *testing.T) {
 		t.Errorf("Expected nil, got %s", err)
 	}
 
+	api := NewServer(application.New(cache.NewInMemory(), hasher.Md5{}))
+
 	rr := httptest.NewRecorder()
-	http.HandlerFunc(ping).ServeHTTP(rr, req)
+	http.HandlerFunc(api.ping).ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Expected %d, got %d", 200, status)
