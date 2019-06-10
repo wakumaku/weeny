@@ -3,13 +3,14 @@ package apiserver
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"io"
 	"net/http"
 	"net/url"
 	"weeny/application"
+
+	"github.com/gorilla/mux"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 type ApiServer struct {
@@ -47,6 +48,11 @@ func (api *ApiServer) Start(port int) error {
 		Handler: api.r,
 	}
 	return api.server.ListenAndServe()
+}
+
+func (api *ApiServer) Shutdown() error {
+	// TODO: use shutdown and a context
+	return api.server.Close()
 }
 
 func (api *ApiServer) ping(w http.ResponseWriter, r *http.Request) {
