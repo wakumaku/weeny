@@ -1,7 +1,8 @@
 package application
 
 import (
-	"errors"
+	"github.com/pkg/errors"
+
 	"testing"
 )
 
@@ -96,7 +97,7 @@ func TestSaveError(t *testing.T) {
 	app := New(c, h)
 
 	cachedValue, err := app.Save("hello")
-	if err != expectedCachedError {
+	if errors.Cause(err) != expectedCachedError {
 		t.Fatalf("Unexpected error, got: %s", err)
 	}
 
@@ -118,7 +119,7 @@ func TestSaveEncoderError(t *testing.T) {
 	app := New(c, h)
 
 	cachedValue, err := app.Save("hello")
-	if err != expectedEncodeError {
+	if errors.Cause(err) != expectedEncodeError {
 		t.Fatalf("Unexpected error, got: %s", err)
 	}
 

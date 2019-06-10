@@ -11,3 +11,6 @@ stop:
 
 logs:
 	${PROJECT_PATH}/ops/scripts/logs.sh
+
+test:
+	docker exec -w ${PROJECT_PATH}/src ${PROJECT_NAME}_workspace_1 go test ./...

@@ -9,6 +9,10 @@ import (
 
 func TestShouldReturnAnInMemoryCacheInstance(t *testing.T) {
 
+	lastVal := os.Getenv("CACHE_ENGINE")
+	os.Setenv("CACHE_ENGINE", "")
+	defer os.Setenv("CACHE_ENGINE", lastVal)
+
 	c := CreateCacheFromConfig()
 
 	switch c.(type) {
@@ -21,7 +25,10 @@ func TestShouldReturnAnInMemoryCacheInstance(t *testing.T) {
 
 func TestShouldReturnARedisCacheInstance(t *testing.T) {
 
-	os.Setenv("USE_REDIS", "true")
+	lastVal := os.Getenv("CACHE_ENGINE")
+	os.Setenv("CACHE_ENGINE", "redis")
+	defer os.Setenv("CACHE_ENGINE", lastVal)
+
 	c := CreateCacheFromConfig()
 
 	switch c.(type) {
