@@ -5,7 +5,7 @@ services:
     build:
       context: ./workspace
     environment: 
-      - USE_REDIS=true
+      - CACHE_ENGINE=redis
       - PROJECT_PATH=${PROJECT_PATH}
     working_dir: ${PROJECT_PATH}
     command: >-

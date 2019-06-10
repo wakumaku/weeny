@@ -8,8 +8,8 @@ import (
 
 func CreateCacheFromConfig() cache.Cache {
 
-	// if setted, just use the default paramsfor redis
-	if useRedis := os.Getenv("USE_REDIS"); useRedis != "" {
+	// selects cache engine
+	if cacheEngine := os.Getenv("CACHE_ENGINE"); cacheEngine == "redis" {
 		return cache.NewRedis("redis", 6739, "", 0)
 	}
 
