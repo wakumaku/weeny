@@ -1,15 +1,22 @@
 version: '3'
 
 services:
-  application:
-    image: golang:1.12
+  workspace:
+    build:
+      context: ./workspace
     environment: 
       - USE_REDIS=true
-    working_dir: /project/src
-    command: sh -c "go mod tidy && go mod vendor && go build -o ../.build/weeny cmd/http/main.go && ../.build/weeny"
+      - PROJECT_PATH=${PROJECT_PATH}
+    working_dir: ${PROJECT_PATH}
+    command: >-
+      godev
+      --watch "${PROJECT_PATH}/src"
+      --rate "2s"
+      --dir "${PROJECT_PATH}/src/cmd/http"
+      --output "../../../.build/weeny"
     volumes: 
     - ${PROJECT_PATH}/.build/_tmp_go:/go
-    - ${PROJECT_PATH}:/project
+    - ${PROJECT_PATH}:${PROJECT_PATH}
     ports:
       - "8080:8000"
 
