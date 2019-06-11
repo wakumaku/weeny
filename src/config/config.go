@@ -17,5 +17,10 @@ func CreateCacheFromConfig() cache.Cache {
 }
 
 func CreateHasherFromConfig() hasher.Hash {
+	// selects cache engine
+	if enc := os.Getenv("HASHER_ENGINE"); enc == "hashids" {
+		return &hasher.Hashids{}
+	}
+
 	return &hasher.Md5{}
 }

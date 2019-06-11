@@ -6,6 +6,7 @@ services:
       context: ./workspace
     environment: 
       - CACHE_ENGINE=redis
+      - HASHER_ENGINE=hashids
       - PROJECT_PATH=${PROJECT_PATH}
     working_dir: ${PROJECT_PATH}
     command: >-
