@@ -10,7 +10,7 @@ func CreateCacheFromConfig() cache.Cache {
 
 	// selects cache engine
 	if cacheEngine := os.Getenv("CACHE_ENGINE"); cacheEngine == "redis" {
-		return cache.NewRedis("redis", 6739, "", 0)
+		return cache.NewRedis("redis", 6379, "", 0)
 	}
 
 	return cache.NewInMemory()
