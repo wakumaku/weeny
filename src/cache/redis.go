@@ -29,8 +29,8 @@ func (r *Redis) Save(key, value string) error {
 
 func (r *Redis) Retrieve(key string) (string, error) {
 	res, err := r.client.HGet("urlmaps", key).Result()
-	if err != nil {
-		return res, errors.Wrap(err, "HGET redis")
+	if res == "" {
+		err = errors.Wrap(err, "HGET redis")
 	}
 	return res, err
 }
