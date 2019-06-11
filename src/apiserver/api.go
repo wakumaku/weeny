@@ -103,6 +103,7 @@ func (api *ApiServer) shotern(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	api.logger.Debug().Msgf("hash: %s, URL: %s", urlHash, payload.URL)
 	respond(w, "Success", urlHash)
 
 }
@@ -132,5 +133,7 @@ func (api *ApiServer) lookup(w http.ResponseWriter, r *http.Request) {
 		respondError(w, "Failure")
 		return
 	}
+
+	api.logger.Debug().Msgf("hash: %s, URL: %s", hash, url)
 	respond(w, "Success", url)
 }
