@@ -175,3 +175,27 @@ func TestPostURLAndLookupHash(t *testing.T) {
 		t.Fatalf("%s : %s", body, err)
 	}
 }
+
+func TestGetUrlRedirectionFromHash(t *testing.T) {
+
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+
+	req, err := http.NewRequest(http.MethodGet, baseURL+"/d4faf77f2107085ad92c39bc47530014", nil)
+	if err != nil {
+		panic(err)
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusTemporaryRedirect {
+		t.Fatalf("expected: %d, got: %d", http.StatusTemporaryRedirect, resp.StatusCode)
+	}
+}

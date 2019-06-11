@@ -120,8 +120,8 @@ func (api *ApiServer) redirect(w http.ResponseWriter, r *http.Request) {
 
 	api.logger.Debug().Msgf("redirecting hash: %s, url: %s", hash, url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-	respond(w, "Success", url)
-
+	// don't write anything to the body, it's a redirect
+	return
 }
 
 func (api *ApiServer) lookup(w http.ResponseWriter, r *http.Request) {
