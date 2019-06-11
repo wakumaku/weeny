@@ -4,10 +4,15 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 	"weeny/apiserver"
+	"weeny/application"
+	"weeny/cache"
+	"weeny/hasher"
 )
 
 type response struct {
@@ -18,55 +23,55 @@ type response struct {
 var s *apiserver.ApiServer
 
 const (
-	// serverPort = 8000
-	baseURL = "http://localhost:8000"
+	serverPort = 4444
+	baseURL    = "http://localhost:4444"
 )
 
-// func startServer() {
+func startServer() {
 
-// 	s = apiserver.NewServer(
-// 		application.New(
-// 			cache.NewRedis("redis", 6379, "", 0),
-// 			&hasher.Md5{},
-// 		),
-// 	)
+	s = apiserver.NewServer(
+		application.New(
+			cache.NewRedis("redis", 6379, "", 0),
+			&hasher.Md5{},
+		),
+	)
 
-// 	if err := s.Start(serverPort); err != nil {
-// 		// nice
-// 	}
-// }
+	if err := s.Start(serverPort); err != nil {
+		// nice
+	}
+}
 
-// func waitForServer() {
-// 	started := time.Now()
-// 	for {
-// 		if started.After(time.Now().Add(5 * time.Second)) {
-// 			panic("Time out waiting for server to start")
-// 		}
-// 		resp, err := http.Get(baseURL + "/ping")
-// 		if err != nil {
-// 			continue
-// 		}
-// 		defer resp.Body.Close()
-// 		body, _ := ioutil.ReadAll(resp.Body)
-// 		if string(body) == "Pong" {
-// 			break // up and running!
-// 		}
-// 		time.Sleep(500 * time.Millisecond)
-// 	}
-// }
+func waitForServer() {
+	started := time.Now()
+	for {
+		if started.After(time.Now().Add(5 * time.Second)) {
+			panic("Time out waiting for server to start")
+		}
+		resp, err := http.Get(baseURL + "/ping")
+		if err != nil {
+			continue
+		}
+		defer resp.Body.Close()
+		body, _ := ioutil.ReadAll(resp.Body)
+		if string(body) == "Pong" {
+			break // up and running!
+		}
+		time.Sleep(500 * time.Millisecond)
+	}
+}
 
-// func TestMain(m *testing.M) {
+func TestMain(m *testing.M) {
 
-// 	go startServer()
+	go startServer()
 
-// 	waitForServer()
+	waitForServer()
 
-// 	r := m.Run()
+	r := m.Run()
 
-// 	_ = s.Shutdown()
+	_ = s.Shutdown()
 
-// 	os.Exit(r)
-// }
+	os.Exit(r)
+}
 
 func TestGetNonExistingHash(t *testing.T) {
 
