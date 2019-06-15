@@ -16,7 +16,8 @@ services:
       --dir "${PROJECT_PATH}/src/cmd/http"
       --output "../../../.build/weeny"
     volumes: 
-    - ${PROJECT_PATH}/.build/_tmp_go:/go/pkg/mod/cache
+    - ${PROJECT_PATH}/.build/_tmp_go/pkg:/go/pkg
+    - ${PROJECT_PATH}/.build/_tmp_go/src:/go/src
     - ${PROJECT_PATH}:${PROJECT_PATH}
     ports:
       - "8080:8000"
