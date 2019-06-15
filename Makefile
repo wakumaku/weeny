@@ -1,16 +1,14 @@
 export PROJECT_NAME := weeny
 export PROJECT_PATH := $(shell pwd)
 
-start:
-	${PROJECT_PATH}/ops/scripts/stop.sh
-	${PROJECT_PATH}/ops/scripts/start.sh
-	${PROJECT_PATH}/ops/scripts/logs.sh
+start: stop
+	docker-compose -p ${PROJECT_NAME} -f ${PROJECT_PATH}/ops/docker/docker-compose.yml up -d --build
 
 stop:
-	${PROJECT_PATH}/ops/scripts/stop.sh
+	docker-compose -p ${PROJECT_NAME} -f ${PROJECT_PATH}/ops/docker/docker-compose.yml down
 
 logs:
-	${PROJECT_PATH}/ops/scripts/logs.sh
+	docker-compose -p ${PROJECT_NAME} -f ${PROJECT_PATH}/ops/docker/docker-compose.yml logs -f
 
 test:
 	docker exec -w ${PROJECT_PATH}/src ${PROJECT_NAME}_workspace_1 go test ./...
