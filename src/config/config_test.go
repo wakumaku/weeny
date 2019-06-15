@@ -39,7 +39,11 @@ func TestShouldReturnARedisCacheInstance(t *testing.T) {
 	}
 }
 
-func TestShouldReturnAnMD5HasherInstance(t *testing.T) {
+func TestShouldReturnAnMD5HasherInstanceByDefault(t *testing.T) {
+
+	lastVal := os.Getenv("HASHER_ENGINE")
+	os.Setenv("HASHER_ENGINE", "")
+	defer os.Setenv("HASHER_ENGINE", lastVal)
 
 	h := CreateHasherFromConfig()
 
@@ -48,5 +52,21 @@ func TestShouldReturnAnMD5HasherInstance(t *testing.T) {
 		// Nice!
 	default:
 		t.Errorf("Expected *hasher.Md5, got: %T", h)
+	}
+}
+
+func TestShouldReturnAHashidsHasherInstance(t *testing.T) {
+
+	lastVal := os.Getenv("HASHER_ENGINE")
+	os.Setenv("HASHER_ENGINE", "hashids")
+	defer os.Setenv("HASHER_ENGINE", lastVal)
+
+	h := CreateHasherFromConfig()
+
+	switch h.(type) {
+	case *hasher.Hashids:
+		// Nice!
+	default:
+		t.Errorf("Expected *hasher.Hashids, got: %T", h)
 	}
 }
