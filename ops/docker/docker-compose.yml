@@ -16,10 +16,17 @@ services:
       --dir "${PROJECT_PATH}/src/cmd/http"
       --output "../../../.build/weeny"
     volumes: 
-    - ${PROJECT_PATH}/.build/_tmp_go:/go
+    - ${PROJECT_PATH}/.build/_tmp_go:/go/pkg/mod/cache
     - ${PROJECT_PATH}:${PROJECT_PATH}
     ports:
       - "8080:8000"
-
+    networks: 
+      - local
+  
   redis:
     image: "redis:alpine"
+    networks: 
+      - local
+
+networks: 
+  local:
