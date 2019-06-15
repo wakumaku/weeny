@@ -1,9 +1,10 @@
 package application
 
 import (
-	"github.com/pkg/errors"
 	"weeny/cache"
 	"weeny/hasher"
+
+	"github.com/pkg/errors"
 )
 
 type Application struct {

@@ -10,15 +10,16 @@ services:
       - PROJECT_PATH=${PROJECT_PATH}
     working_dir: ${PROJECT_PATH}
     command: >-
-      godev
-      --watch "${PROJECT_PATH}/src"
-      --rate "2s"
-      --dir "${PROJECT_PATH}/src/cmd/http"
-      --output "../../../.build/weeny"
+      CompileDaemon
+      -directory=${PROJECT_PATH}/src
+      -exclude-dir=.git
+      -exclude-dir=vendor
+      -exclude-dir=.build
+      -build="go build -race -o ${PROJECT_PATH}/.build/weeny ${PROJECT_PATH}/src/cmd/http/main.go"
+      -command="${PROJECT_PATH}/.build/weeny"
     volumes: 
-    - ${PROJECT_PATH}/.build/_tmp_go/pkg:/go/pkg
-    - ${PROJECT_PATH}/.build/_tmp_go/src:/go/src
     - ${PROJECT_PATH}:${PROJECT_PATH}
+    - ${PROJECT_PATH}/.build/.cache/pkg:/go/pkg
     ports:
       - "8080:8000"
     networks: 
